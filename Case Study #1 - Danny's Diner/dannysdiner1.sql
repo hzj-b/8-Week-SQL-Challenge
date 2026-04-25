@@ -180,3 +180,30 @@ ON m.product_id = s.product_id
 WHERE MONTH(s.order_date) IN ('1')
 GROUP BY s.customer_id
 ORDER BY points;
+
+-- BONUS QUESTIONS 
+
+-- The following questions are related creating basic data tables that Danny and his team can use to quickly derive insights without needing to join the underlying tables using SQL.
+-- Recreate the following table output using the available data:
+
+SELECT s.customer_id, s.order_date, m.product_name, m.price, CASE WHEN mem.join_date <= s.order_date THEN 'Y' ELSE 'N' END AS membership
+FROM sales s 
+JOIN menu m 
+ON s.product_id = m.product_id
+LEFT JOIN members mem 
+ON mem.customer_id = s.customer_id
+ORDER BY customer_id, order_date, price DESC;
+
+-- Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
+
+WITH CTE2 as (
+SELECT s.customer_id, s.order_date, m.product_name, m.price, CASE WHEN mem.join_date <= s.order_date THEN 'Y' ELSE 'N' END AS membership
+FROM sales s 
+JOIN menu m 
+ON s.product_id = m.product_id
+LEFT JOIN members mem 
+ON mem.customer_id = s.customer_id
+)
+
+SELECT *, CASE WHEN membership = 'N' THEN NULL ELSE DENSE_RANK() OVER (PARTITION BY customer_id, membership ORDER BY order_date) END AS ranking
+FROM CTE2;
