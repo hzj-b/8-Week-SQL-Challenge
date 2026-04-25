@@ -36,6 +36,7 @@ ORDER BY points;
 ```
 <img width="146" height="71" alt="image" src="https://github.com/user-attachments/assets/66abb6be-e9be-4b53-8aac-7bb1fc71d5ff" />
 
+
 If points are given only after joining loyalty program,
 ```
 SELECT s.customer_id, SUM(CASE WHEN m.product_name IN ('sushi') THEN price*20 ELSE price*10 END) AS points
