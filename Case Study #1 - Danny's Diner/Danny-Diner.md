@@ -23,7 +23,7 @@
 8. What is the total items and amount spent for each member before they became a member?
 <img width="266" height="51" alt="image" src="https://github.com/user-attachments/assets/705bc9ba-0732-4f8a-9a5d-e74f365c741f" />
 
-15. If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
+9. If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
 
 If points are given regardless of being in the loyalty program,
 ```
@@ -50,4 +50,22 @@ ORDER BY points;
 ```
 <img width="143" height="52" alt="image" src="https://github.com/user-attachments/assets/189e1659-05f9-4a2a-a9ce-a78570397dd1" />
 
-17. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
+10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
+```
+WITH CTE AS (
+SELECT *, join_date + INTERVAL 7 DAY AS special_end_date
+FROM members 
+)
+
+SELECT s.customer_id, SUM(CASE WHEN s.order_date BETWEEN c.join_date AND special_end_date THEN price*20 WHEN s.order_date NOT BETWEEN c.join_date AND special_end_date AND m.product_name IN ('sushi') THEN price*20 ELSE price*10 END) AS points
+FROM CTE c
+JOIN sales s
+ON c.customer_id = s.customer_id
+JOIN menu m
+ON m.product_id = s.product_id
+WHERE MONTH(s.order_date) IN ('1')
+GROUP BY s.customer_id
+ORDER BY points;
+```
+<img width="148" height="51" alt="image" src="https://github.com/user-attachments/assets/a1645135-3c6b-40c5-b0fe-39e1e8149f0d" />
+
