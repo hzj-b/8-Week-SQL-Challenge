@@ -2,7 +2,7 @@ Need to clean data in the customer_orders and runner_orders table as values in c
 
 The data will be cleaned to improve consistency in the data.
 
--- CLeaning customer_orders
+-- Cleaning customer_orders
 ```
 DROP TABLE IF EXISTS customer_orders2;
 CREATE TEMPORARY TABLE customer_orders2 AS
