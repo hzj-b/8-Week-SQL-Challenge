@@ -1,3 +1,4 @@
+This part was a lot more challenging for me and I had to spend more time on each question, especially questions 4 and 5, having troubles, getting confused with unclean formatting.
 -- 1. What are the standard ingredients for each pizza?
 ```
 SELECT pizza_name, topping_name	
