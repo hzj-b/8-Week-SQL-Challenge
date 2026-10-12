@@ -11,6 +11,7 @@ WHERE r.cancellation IS NULL;
 <img width="174" height="67" alt="image" src="https://github.com/user-attachments/assets/b51f636e-59bc-43ca-9d3e-7f1f9ced1567" />
 
 --What if there was an additional $1 charge for any pizza extras?
+
 --Add cheese is $1 extra
 ```
 SELECT 
@@ -69,15 +70,25 @@ FROM ratings;
 
 3.Using your newly generated table - can you join all of the information together to form a table which has the following information for successful deliveries?
 --customer_id
+
 --order_id
+
 --runner_id
+
 --rating
+
 --order_time
+
 --pickup_time
+
 --Time between order and pickup
+
 --Delivery duration
+
 --Average speed
+
 --Total number of pizzas
+
 ```
 SELECT c.customer_id, c.order_id, r.runner_id, ra.rating, c.order_time, r.pickup_time, (r.pickup_time - c.order_time) AS time_btwn, 
 r.duration, CONCAT(ROUND((60*r.distance/r.duration)::NUMERIC,2),'km/h') AS speed, COUNT(c.pizza_id) AS no_of_pizzas
