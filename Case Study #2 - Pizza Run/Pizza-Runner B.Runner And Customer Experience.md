@@ -1,9 +1,11 @@
 1. How many runners signed up for each 1 week period? (i.e. week starts 2021-01-01)
 
-``SELECT (registration_date - DATE '2021-01-01') / 7 AS week, COUNT(runner_id)
+```
+SELECT (registration_date - DATE '2021-01-01') / 7 AS week, COUNT(runner_id)
 FROM runners
 GROUP BY week
-ORDER BY week;``
+ORDER BY week;
+```
 <img width="176" height="115" alt="image" src="https://github.com/user-attachments/assets/1e9d1d9b-22a7-43cd-b428-03520c433fd5" />
 
 2. What was the average time in minutes it took for each runner to arrive at the Pizza Runner HQ to pickup the order?
