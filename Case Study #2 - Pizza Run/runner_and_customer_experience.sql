@@ -37,9 +37,6 @@ FROM runner_orders2;
 
 -- How many runners signed up for each 1 week period? (i.e. week starts 2021-01-01)
 
-SELECT *
-FROM runners;
-
 SELECT (registration_date - DATE '2021-01-01') / 7 AS week, COUNT(runner_id)
 FROM runners
 GROUP BY week
@@ -76,8 +73,7 @@ SELECT order_id, COUNT(*) AS no_of_pizzas
 FROM customer_orders2 
 GROUP BY order_id
 )
-
-SELECT p.no_of_pizzas, CONCAT(ROUND(AVG(o.arrival_duration),2),' minutes')
+SELECT p.no_of_pizzas, CONCAT(ROUND(AVG(o.arrival_duration),2),' minutes') AS prep_time
 FROM order_times o
 JOIN pizza_count p 
 ON o.order_id = p.order_id
@@ -94,7 +90,6 @@ JOIN customer_orders2 c
 ON r.order_id = c.order_id
 WHERE pickup_time IS NOT NULL
 )
-
 SELECT customer_id, CONCAT(AVG(distance),'km') AS avg_distance
 FROM distance_travelled
 GROUP BY customer_id
@@ -108,8 +103,7 @@ WHERE cancellation IS NULL;
 
 -- What was the average speed for each runner for each delivery and do you notice any trend for these values?
 
-
-SELECT r.order_id, r.runner_id, CONCAT(ROUND(((r.distance::NUMERIC / r.duration) * 60),2),' km/h') AS speed
+SELECT DISTINCT r.order_id, r.runner_id, CONCAT(ROUND(((r.distance::NUMERIC / r.duration) * 60),2),' km/h') AS speed
 FROM customer_orders2 c
 JOIN runner_orders2 r
 ON c.order_id = r.order_id;
