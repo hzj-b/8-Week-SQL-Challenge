@@ -69,6 +69,7 @@ FROM ratings;
 <img width="437" height="283" alt="image" src="https://github.com/user-attachments/assets/a9d8935b-21ec-4e4a-a16d-e27877c3bb9c" />
 
 3.Using your newly generated table - can you join all of the information together to form a table which has the following information for successful deliveries?
+
 --customer_id
 
 --order_id
