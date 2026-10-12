@@ -9,6 +9,8 @@ ON n.pizza_id = r.pizza_id
 JOIN pizza_toppings t
 ON t.topping_id = ANY(string_to_array(r.toppings, ',')::INT[]);
 ```
+<img width="244" height="388" alt="image" src="https://github.com/user-attachments/assets/1a165403-95fa-454e-9333-c50c41cb1a1f" />
+
 -- 2. What was the most commonly added extra?
 ```
 WITH common AS
@@ -27,6 +29,8 @@ FROM common
  ) ranking
 WHERE rnk = 1;
 ```
+<img width="338" height="64" alt="image" src="https://github.com/user-attachments/assets/a042319e-30d3-420d-8e24-a0931be60b19" />
+
 -- 3. What was the most common exclusion?
 ```
 WITH exclusion AS
@@ -45,6 +49,8 @@ FROM exclusion
  ) ranking2
 WHERE rnk = 1;
 ```
+<img width="364" height="64" alt="image" src="https://github.com/user-attachments/assets/7ac7d1b9-a48a-4f70-b935-9fe36e0e106b" />
+
 --4. Generate an order item for each record in the customers_orders table in the format of one of the following:
 --Meat Lovers
 --Meat Lovers - Exclude Beef
@@ -95,6 +101,7 @@ JOIN customer_orders2 c
 ON p.pizza_id = c.pizza_id
 ORDER BY order_id;
 ```
+<img width="724" height="387" alt="image" src="https://github.com/user-attachments/assets/c8dace3b-2308-496e-bf39-82208aa67e86" />
 
 -- 5. What is the total quantity of each ingredient used in all delivered pizzas sorted by most frequent first?
 ```
@@ -143,3 +150,5 @@ FROM all_ingredients
 GROUP BY topping_name
 ORDER BY total_quantity DESC;
 ```
+<img width="252" height="337" alt="image" src="https://github.com/user-attachments/assets/fd7e3952-6601-412a-a641-d04829fc3814" />
+
