@@ -1,4 +1,4 @@
-<img width="240" height="83" alt="image" src="https://github.com/user-attachments/assets/237a59de-f2b8-4126-9197-f329c35ff9e7" />--In a single query, perform the following operations and generate a new table in the data_mart schema named clean_weekly_sales:
+1. In a single query, perform the following operations and generate a new table in the data_mart schema named clean_weekly_sales:
 
 --Convert the week_date to a DATE format
 
@@ -32,15 +32,15 @@ FROM weekly_sales;
 SELECT * 
 FROM weekly_sales2;
 ```
-
---What day of the week is used for each week_date value?
+<img width="240" height="83" alt="image" src="https://github.com/user-attachments/assets/237a59de-f2b8-4126-9197-f329c35ff9e7" />
+2. What day of the week is used for each week_date value?
 ```
 SELECT week_date, TO_CHAR(date,'Day') 
 FROM weekly_sales2;
 ```
 <img width="261" height="451" alt="image" src="https://github.com/user-attachments/assets/78f76f85-deda-411d-bf45-81432816460c" />
 
---What range of week numbers are missing from the dataset?
+3. What range of week numbers are missing from the dataset?
 ```
 SELECT week_number
 FROM generate_series(1, 52) AS week_number
@@ -48,7 +48,7 @@ WHERE week_number NOT IN (SELECT DISTINCT week FROM weekly_sales2)
 ```
 <img width="150" height="737" alt="image" src="https://github.com/user-attachments/assets/469c3da8-7471-4a98-82c2-3b3f892676d0" />
 
---How many total transactions were there for each year in the dataset?
+4. How many total transactions were there for each year in the dataset?
 ```
 SELECT COUNT(transactions) AS no_of_transactions , year
 FROM weekly_sales2
@@ -56,14 +56,14 @@ GROUP BY year;
 ```
 <img width="175" height="115" alt="image" src="https://github.com/user-attachments/assets/ad87cd46-f1c9-4078-8a0b-e74a593a9e34" />
 
---What is the total sales for each region for each month?
+5. What is the total sales for each region for each month?
 ```
 SELECT SUM(sales), region, month
 FROM weekly_sales2
 GROUP BY region, month
 ORDER BY region, month;
 ```
---What is the total count of transactions for each platform
+6. What is the total count of transactions for each platform
 ```
 SELECT COUNT(transactions), platform
 FROM weekly_sales2
@@ -71,7 +71,7 @@ GROUP BY platform;
 ```
 <img width="240" height="83" alt="image" src="https://github.com/user-attachments/assets/4eef14b4-8782-4dd7-8d8d-1749ba9cb271" />
 
---What is the percentage of sales for Retail vs Shopify for each month?
+7. What is the percentage of sales for Retail vs Shopify for each month?
 ```
 SELECT month, platform, SUM(sales) AS total_sales, ROUND(100 * SUM(sales) / SUM(SUM(sales)) OVER(PARTITION BY month),2) AS sales_pct
 FROM weekly_sales2
@@ -79,7 +79,7 @@ GROUP BY month, platform;
 ```
 <img width="427" height="390" alt="image" src="https://github.com/user-attachments/assets/278cbc88-ae69-4477-91f7-c2ebcf4abcee" />
 
---What is the percentage of sales by demographic for each year in the dataset?
+8. What is the percentage of sales by demographic for each year in the dataset?
 ```
 SELECT year, demographic, SUM(sales) AS total_sales, ROUND(100 * SUM(sales) / SUM(SUM(sales)) OVER(PARTITION BY year),2) AS sales_pct
 FROM weekly_sales2
@@ -87,7 +87,7 @@ GROUP BY year, demographic;
 ```
 <img width="388" height="260" alt="image" src="https://github.com/user-attachments/assets/5a492d3c-2766-4c77-bb7a-fbc1ca33188b" />
 
---Which age_band and demographic values contribute the most to Retail sales?
+9. Which age_band and demographic values contribute the most to Retail sales?
 ```
 SELECT age_band, SUM(sales) AS total_sales
 FROM weekly_sales2
@@ -109,12 +109,12 @@ LIMIT 1;
 ```
 <img width="232" height="55" alt="image" src="https://github.com/user-attachments/assets/76fa30c1-b8f1-4c9d-8dda-1e66033d815f" />
 
---Can we use the avg_transaction column to find the average transaction size for each year for Retail vs Shopify? If not - how would you calculate it instead?
+10. Can we use the avg_transaction column to find the average transaction size for each year for Retail vs Shopify? If not - how would you calculate it instead?
 
 SELECT *
 FROM weekly_sales2; 
 
---What is the total sales for the 4 weeks before and after 2020-06-15? What is the growth or reduction rate in actual values and percentage of sales?
+11. What is the total sales for the 4 weeks before and after 2020-06-15? What is the growth or reduction rate in actual values and percentage of sales?
 
 ```
 WITH sales_period AS
