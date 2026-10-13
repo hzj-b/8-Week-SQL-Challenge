@@ -1,4 +1,4 @@
-<img width="580" height="112" alt="image" src="https://github.com/user-attachments/assets/bcc08fcd-fbca-4cc7-ab25-5b6f399a6e61" />1. How many users are there?
+1. How many users are there?
 ```
 SELECT COUNT(DISTINCT user_id)
 FROM users;
@@ -99,8 +99,11 @@ LIMIT 3;
 10. Using a single SQL query - create a new output table which has the following details:
 
 --How many times was each product viewed?
+
 --How many times was each product added to cart?
+
 --How many times was each product added to a cart but not purchased (abandoned)?
+
 --How many times was each product purchased?
 ```
 DROP TABLE IF EXISTS temp_table;
@@ -174,6 +177,7 @@ SELECT *
 FROM temp_table;
 ```
 <img width="727" height="264" alt="image" src="https://github.com/user-attachments/assets/4afa69d0-5173-4c57-9bac-9cc4dbbe657e" />
+
 ```
 DROP TABLE IF EXISTS temp_table2;
 CREATE TEMP TABLE temp_table2 AS
@@ -262,15 +266,25 @@ FROM temp_table;
 
 15. Generate a table that has 1 single row for every unique visit_id record and has the following columns: 
 --user_id
+
 --visit_id
+
 --visit_start_time: the earliest event_time for each visit
+
 --page_views: count of page views for each visit
+
 --cart_adds: count of product cart add events for each visit
+
 --purchase: 1/0 flag if a purchase event exists for each visit
+
 --campaign_name: map the visit to a campaign if the visit_start_time falls between the start_date and end_date
+
 --impression: count of ad impressions for each visit
+
 --click: count of ad clicks for each visit
+
 --(Optional column) cart_products: a comma separated text value with products added to the cart sorted by the order they were added to the cart (hint: use the sequence_number)
+
 
 ```
 CREATE TEMP TABLE temp_table3 AS
@@ -342,4 +356,5 @@ ROUND(COUNT(CASE WHEN impression = '0' AND purchase = '1' THEN 1 END)::NUMERIC *
 ROUND(COUNT(CASE WHEN impression = '1' AND purchase = '1' AND click = '0' THEN 1 END)::NUMERIC * 100/ COUNT(CASE WHEN impression = '1' AND click = '0' THEN 1 END),2) AS impression_no_click_rates
 FROM temp_table3;
 ```
-<img width="498" height="53" alt="image" src="https://github.com/user-attachments/assets/2c9b159e-985f-4d61-b22f-4ce4669d092c" />
+<img width="493" height="57" alt="image" src="https://github.com/user-attachments/assets/e3b21a4a-d2f9-47a7-b483-4ea988213329" />
+
