@@ -9475,7 +9475,7 @@ GROUP BY txn_type;
 
 -- What is the average total historical deposit counts and amounts for all customers?
 
-SELECT COUNT(txn_type) / COUNT(DISTINCT customer_id) AS avg_deposit_count, AVG(txn_amount) AS avg_deposit_amt
+SELECT COUNT(txn_type) / COUNT(DISTINCT customer_id) AS avg_deposit_count, '$' || ROUND(AVG(txn_amount),2) AS avg_deposit_amt
 FROM customer_transactions
 WHERE txn_type = 'deposit';
 
@@ -9491,7 +9491,7 @@ GROUP BY customer_id, EXTRACT(MONTH FROM txn_date)
 ORDER BY 1,2
 )
 
-SELECT month, COUNT(customer_id)
+SELECT month, COUNT(customer_id) AS no_of_customers
 FROM monthly
 WHERE deposit_count > 1
 AND purchase_or_withdrawal >= 1
@@ -9540,11 +9540,9 @@ growth AS
 SELECT *, LAG(closing_balance,1) OVER(PARTITION BY customer_id ORDER BY month) AS prev_closing
 FROM closing
 )
-SELECT * 
-FROM growth
-WHERE prev_closing IS NOT NULL
-AND prev_closing <> 0 
-AND (closing_balance - prev_closing) / prev_closing > 0.05;
+SELECT ROUND(COUNT(DISTINCT CASE WHEN prev_closing IS NOT NULL AND prev_closing <> 0 AND (closing_balance - prev_closing) / prev_closing > 0.05 THEN customer_id END)::NUMERIC * 100 / COUNT(DISTINCT customer_id),2) || '%' AS pct
+FROM growth;
+
 
 --To test out a few different hypotheses - the Data Bank team wants to run an experiment where different groups of customers would be allocated data using 3 different options:
 
@@ -9576,10 +9574,12 @@ SELECT customer_id, month, running_sum AS closing_balance
 FROM ranking
 WHERE rn = 1
 )
-
 SELECT customer_id, MIN(closing_balance) AS min_balance, ROUND(AVG(closing_balance),2) AS avg_balance, MAX(closing_balance) AS max_balance
 FROM closing
 GROUP BY customer_id; 
+
+SELECT *
+FROM monthly_stats;
 
 --Option 1: data is allocated based off the amount of money at the end of the previous month
 
