@@ -98,7 +98,9 @@ GROUP BY age_band
 ORDER BY total_sales DESC
 LIMIT 1;
 ```
+
 <img width="218" height="61" alt="image" src="https://github.com/user-attachments/assets/2185456c-613d-494f-901f-1376247810b0" />
+
 ```
 SELECT demographic, SUM(sales) AS total_sales
 FROM weekly_sales2
@@ -110,12 +112,7 @@ LIMIT 1;
 ```
 <img width="232" height="55" alt="image" src="https://github.com/user-attachments/assets/76fa30c1-b8f1-4c9d-8dda-1e66033d815f" />
 
-10. Can we use the avg_transaction column to find the average transaction size for each year for Retail vs Shopify? If not - how would you calculate it instead?
-
-SELECT *
-FROM weekly_sales2; 
-
-11. What is the total sales for the 4 weeks before and after 2020-06-15? What is the growth or reduction rate in actual values and percentage of sales?
+10. What is the total sales for the 4 weeks before and after 2020-06-15? What is the growth or reduction rate in actual values and percentage of sales?
 
 ```
 WITH sales_period AS
@@ -161,7 +158,7 @@ FROM sales_period;
 <img width="388" height="60" alt="image" src="https://github.com/user-attachments/assets/021ad2e0-50ca-454c-8308-50175bf4e355" />
 
 
---What about the entire 12 weeks before and after?
+11. What about the entire 12 weeks before and after?
 ```
 WITH sales_period AS
 (
@@ -205,7 +202,7 @@ FROM sales_period;
 ```
 <img width="398" height="61" alt="image" src="https://github.com/user-attachments/assets/2482ed31-02e8-4615-bcfa-ba1822e78fc8" />
 
---How do the sale metrics for these 2 periods before and after compare with the previous years in 2018 and 2019?
+12. How do the sale metrics for these 2 periods before and after compare with the previous years in 2018 and 2019?
 ```
 SELECT week
 FROM weekly_sales2
