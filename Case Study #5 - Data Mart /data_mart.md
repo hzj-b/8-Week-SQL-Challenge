@@ -33,6 +33,7 @@ SELECT *
 FROM weekly_sales2;
 ```
 <img width="240" height="83" alt="image" src="https://github.com/user-attachments/assets/237a59de-f2b8-4126-9197-f329c35ff9e7" />
+
 2. What day of the week is used for each week_date value?
 ```
 SELECT week_date, TO_CHAR(date,'Day') 
