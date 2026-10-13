@@ -5,7 +5,7 @@ FROM customer_nodes;
 ```
 <img width="148" height="62" alt="image" src="https://github.com/user-attachments/assets/e085f3e1-1843-40b6-92b8-7a9f39825af6" />
 
--- What is the number of nodes per region?
+2. What is the number of nodes per region?
 ```
 SELECT region_id, COUNT(node_id)
 FROM customer_nodes
@@ -13,7 +13,7 @@ GROUP BY region_id;
 ```
 <img width="183" height="171" alt="image" src="https://github.com/user-attachments/assets/837f7de9-f182-4063-a54c-66241c7512b8" />
 
--- How many customers are allocated to each region?
+3. How many customers are allocated to each region?
 ```
 SELECT region_id, COUNT(DISTINCT customer_id) AS no_of_customers
 FROM customer_nodes
@@ -21,7 +21,7 @@ GROUP BY region_id;
 ```
 <img width="239" height="162" alt="image" src="https://github.com/user-attachments/assets/1aa29cfe-4ba8-489c-b28c-2a21262433ea" />
 
--- How many days on average are customers reallocated to a different node?
+4. How many days on average are customers reallocated to a different node?
 ```
 WITH CTE AS
 (
@@ -38,7 +38,7 @@ WHERE prev_start IS NOT NULL;
 ```
 <img width="148" height="63" alt="image" src="https://github.com/user-attachments/assets/2dc74aec-2f4b-4e70-81ca-6d5806c7c79e" />
 
--- What is the median, 80th and 95th percentile for this same reallocation days metric for each region?
+5. What is the median, 80th and 95th percentile for this same reallocation days metric for each region?
 ```
 WITH CTE AS
 (
@@ -63,7 +63,7 @@ GROUP BY region_name;
 ```
 <img width="546" height="165" alt="image" src="https://github.com/user-attachments/assets/2c9e942a-d643-40a6-abfa-c74ae35dc4b2" />
 
--- What is the unique count and total amount for each transaction type?
+6. What is the unique count and total amount for each transaction type?
 ```
 SELECT txn_type, COUNT(txn_type), SUM(txn_amount) AS totaL_amt
 FROM customer_transactions
@@ -71,7 +71,7 @@ GROUP BY txn_type;
 ```
 <img width="328" height="110" alt="image" src="https://github.com/user-attachments/assets/340a1bec-23a3-4eb7-8b6b-a912d4e12f92" />
 
--- What is the average total historical deposit counts and amounts for all customers?
+7. What is the average total historical deposit counts and amounts for all customers?
 ```
 SELECT COUNT(txn_type) / COUNT(DISTINCT customer_id) AS avg_deposit_count, '$' || ROUND(AVG(txn_amount),2) AS avg_deposit_amt
 FROM customer_transactions
@@ -79,7 +79,7 @@ WHERE txn_type = 'deposit';
 ```
 <img width="290" height="59" alt="image" src="https://github.com/user-attachments/assets/33a44778-ee16-472e-b2d2-61434d6d3f60" />
 
--- For each month - how many Data Bank customers make more than 1 deposit and either 1 purchase or 1 withdrawal in a single month?
+8. For each month - how many Data Bank customers make more than 1 deposit and either 1 purchase or 1 withdrawal in a single month?
 ```
 WITH monthly AS
 (
@@ -99,7 +99,7 @@ GROUP BY month;
 ```
 <img width="239" height="138" alt="image" src="https://github.com/user-attachments/assets/ce20e0a3-765f-4444-a1e5-9f22f1a09d7b" />
 
--- What is the closing balance for each customer at the end of the month?
+9. What is the closing balance for each customer at the end of the month?
 ```
 WITH running_total AS
 (
@@ -117,7 +117,7 @@ FROM ranking
 WHERE rn = 1;
 ```
 
--- What is the percentage of customers who increase their closing balance by more than 5%?
+10. What is the percentage of customers who increase their closing balance by more than 5%?
 ```
 WITH running_total AS
 (
@@ -146,7 +146,7 @@ FROM growth;
 ```
 <img width="151" height="65" alt="image" src="https://github.com/user-attachments/assets/86f9f8af-b21c-4e20-a1cd-c6118a3df5a2" />
 
---To test out a few different hypotheses - the Data Bank team wants to run an experiment where different groups of customers would be allocated data using 3 different options:
+To test out a few different hypotheses - the Data Bank team wants to run an experiment where different groups of customers would be allocated data using 3 different options:
 
 --Option 1: data is allocated based off the amount of money at the end of the previous month
 --Option 2: data is allocated on the average amount of money kept in the account in the previous 30 days
