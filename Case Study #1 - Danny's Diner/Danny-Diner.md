@@ -1,4 +1,8 @@
-1. What is the total amount each customer spent at the restaurant?
+***
+**1. What is the total amount each customer spent at the restaurant?**
+- Total amount spent means we can use `SUM` to aggregate 
+- Each customer means we use `GROUP BY` to group the rows of each individual customer first before adding
+- Since price and customer_id are in separate tables, we have to use `JOIN` in order to combine the tables `ON` product_id
 ```
 SELECT customer_id, SUM(price) as total_spent
 FROM sales JOIN menu ON sales.product_id = menu.product_id
@@ -6,7 +10,10 @@ GROUP BY customer_id;
 ```
 <img width="171" height="68" alt="image" src="https://github.com/user-attachments/assets/119fad52-4611-4225-a416-ec3cb7b84138" />
 
-2. How many days has each customer visited the restaurant?
+***
+**2. How many days has each customer visited the restaurant?**
+- We use `COUNT` to count how many times each customer visited. Since the customer may order more than once, we use `DISTINCT` to only count each date once.
+- `GROUP BY` to separate the count for each customer.
 ```
 SELECT customer_id, COUNT(DISTINCT order_date) AS no_of_days_visited
 FROM sales 
@@ -15,7 +22,11 @@ GROUP BY customer_id;
 
 <img width="209" height="71" alt="image" src="https://github.com/user-attachments/assets/1c20fc8a-9256-4421-8a2f-67a08d9183aa" />
 
-3. What was the first item from the menu purchased by each customer?
+***
+**3. What was the first item from the menu purchased by each customer?**
+- Create a temp table `temptable` and use `DENSE_RANK` to create the column `rn` ordered by `order_date` for each customer using `PARTITION BY`
+- `DENSE_RANK` is used as there is no distinction between orders that are ordered on the same day.
+- Finally, we select rows where `rn = 1` to find the first item purchased.
 ```
 SELECT *
 FROM
@@ -30,7 +41,10 @@ WHERE rn = 1;
 
 <img width="299" height="103" alt="image" src="https://github.com/user-attachments/assets/03e786ee-3c5c-419b-bfd8-1403d70bf799" />
 
-4. What is the most purchased item on the menu and how many times was it purchased by all customers?
+***
+**4. What is the most purchased item on the menu and how many times was it purchased by all customers?**
+- `COUNT` to count the number of times the item was ordered, `GROUP BY` to group all items.
+- `ORDER BY` the number of purchases `DESC` and `LIMIT 1` to find the top item.
 ```
 SELECT *
 FROM
@@ -46,7 +60,11 @@ LIMIT 1;
 ```
 <img width="213" height="37" alt="image" src="https://github.com/user-attachments/assets/45efd66d-a651-416e-bbe6-f872b5603fa0" />
 
-5. Which item was the most popular for each customer?
+***
+**5. Which item was the most popular for each customer?**
+- Create a CTE `favourites` and use `DENSE_RANK` to rank the number of times an item is purchased.
+- `PARTITION BY` customer_id so each customer has their own ranking.
+- Generate results from `favourites` where rnk = 1 to find most popular item.
 ```
 WITH favourites AS 
 (
@@ -64,7 +82,11 @@ WHERE rnk = 1;
 ```
 <img width="313" height="106" alt="image" src="https://github.com/user-attachments/assets/2ccacaa3-5842-4f75-8914-2d99b79282ac" />
 
-6.Which item was purchased first by the customer after they became a member?
+***
+**6.Which item was purchased first by the customer after they became a member?**
+- We must first filter rows where order_date is on or after join_date
+- Then, using `DENSE_RANK` to rank all orders by their order_date in ascending order, `PARTITION BY` for each customer_id.
+- Finally, filter by rn = 1 to find the first purchase.
 ```
 SELECT *
 FROM
@@ -81,7 +103,11 @@ WHERE rn = 1;
 ```
 <img width="301" height="52" alt="image" src="https://github.com/user-attachments/assets/73b1c007-9546-4d9c-9301-06e5b4aeb0b9" />
 
-7. Which item was purchased just before the customer became a member?
+***
+**7. Which item was purchased just before the customer became a member?**
+- First, filter rows where order_date is before join_date.
+- `DENSE_RANK` to rank all orders by order_date in descending order as we want the 'item purchased just before' which means the latest purchase.
+- Filter rn = 1 to find the latest order.
 ```
 SELECT *
 FROM
@@ -98,7 +124,11 @@ WHERE rn = 1;
 ```
 <img width="373" height="67" alt="image" src="https://github.com/user-attachments/assets/16ea0483-dcd2-4802-9ea5-f8137e6fd618" />
 
-8. What is the total items and amount spent for each member before they became a member?
+***
+**8. What is the total items and amount spent for each member before they became a member?**
+- Filter rows where order_date is before join_date.
+- `COUNT(*)` for total_items and `SUM` for total amount spent.
+- `GROUP BY` customer_id to separate values for each customer.
 ```
 SELECT s.customer_id, COUNT(*) AS total_items , SUM(m.price) AS total_amt_spent
 FROM sales s
@@ -112,7 +142,9 @@ ORDER BY total_amt_spent ASC;
 ```
 <img width="266" height="51" alt="image" src="https://github.com/user-attachments/assets/705bc9ba-0732-4f8a-9a5d-e74f365c741f" />
 
-9. If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
+***
+**9. If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?**
+- Using `CASE WHEN` to create the condition when the item is sushi, to multiply the money spent by 20 else we multiply the money spent by 10.
 
 If points are given regardless of being in the loyalty program,
 ```
@@ -125,6 +157,7 @@ ORDER BY points;
 ```
 <img width="146" height="71" alt="image" src="https://github.com/user-attachments/assets/66abb6be-e9be-4b53-8aac-7bb1fc71d5ff" />
 
+- Similar to the conditions above, but after filtering rows where order_date is after join_date.
 
 If points are given only after joining loyalty program,
 ```
@@ -140,7 +173,10 @@ ORDER BY points;
 ```
 <img width="143" height="52" alt="image" src="https://github.com/user-attachments/assets/189e1659-05f9-4a2a-a9ce-a78570397dd1" />
 
-10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
+***
+**10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?**
+- First create a CTE to create another column as `special_end_date` where the date is a week after joining the program.
+- Use `CASE WHEN` to create conditions according to the question.
 ```
 WITH CTE AS (
 SELECT *, join_date + INTERVAL 7 DAY AS special_end_date
@@ -159,10 +195,11 @@ ORDER BY points;
 ```
 <img width="148" height="51" alt="image" src="https://github.com/user-attachments/assets/a1645135-3c6b-40c5-b0fe-39e1e8149f0d" />
 
--- BONUS QUESTIONS 
-
--- The following questions are related creating basic data tables that Danny and his team can use to quickly derive insights without needing to join the underlying tables using SQL.
--- Recreate the following table output using the available data:
+***
+**BONUS QUESTIONS**
+***
+The following questions are related creating basic data tables that Danny and his team can use to quickly derive insights without needing to join the underlying tables using SQL.
+Recreate the following table with customer_id, order_date, product_name, price, member (Y/N).
 
 ```
 SELECT s.customer_id, s.order_date, m.product_name, m.price, CASE WHEN mem.join_date <= s.order_date THEN 'Y' ELSE 'N' END AS membership
@@ -176,7 +213,9 @@ ORDER BY customer_id, order_date, price DESC
 
 <img width="374" height="273" alt="image" src="https://github.com/user-attachments/assets/877b0667-88e1-49c1-ab4a-31929166cfb5" />
 
--- Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
+***
+Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member purchases so he expects null ranking values for the records when customers are not yetpart of the loyalty program.
+
 
 ```
 WITH CTE2 as (
